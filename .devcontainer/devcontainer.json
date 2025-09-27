@@ -1,19 +1,35 @@
 {
-  "name": "network-automation-lab",
+  "name": "lab4-python-requests",
   "image": "mcr.microsoft.com/devcontainers/python:3.11",
-  "postCreateCommand": "pip install -r requirements.txt",
+  "workspaceFolder": "/workspace",
+  "remoteUser": "vscode",
+  "updateRemoteUserUID": true,
+
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
   "customizations": {
     "vscode": {
       "settings": {
-        "python.defaultInterpreterPath": "/usr/local/bin/python"
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "python.testing.pytestEnabled": false
       },
       "extensions": [
         "ms-python.python",
-        "ms-azuretools.vscode-docker"
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker",
+        "eamodio.gitlens"
       ]
     }
   },
-  "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {}
-  }
+
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ],
+
+  "postCreateCommand": "/bin/bash -lc 'mkdir -p /workspace/logs && pip install -r requirements.txt && chmod +x .devcontainer/post_create.sh .devcontainer/post_start.sh && .devcontainer/post_create.sh'",
+
+  "postStartCommand": "/bin/bash -lc '.devcontainer/post_start.sh || true'"
 }
