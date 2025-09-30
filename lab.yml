@@ -1,0 +1,168 @@
+title: "Lab 4 — Python Requests Library"
+course: "Software Defined Networking"
+module: "Network Automation Fundamentals"
+lab_number: 4
+time_estimate: "90–120 minutes"
+
+objectives:
+  - "Use the Python `requests` library to send HTTP requests and receive responses."
+  - "Export a request from Postman into Python and run it as a script."
+  - "Parse JSON into Python dicts/lists and extract specific fields."
+  - "Pretty-print JSON and compose f-strings for clear output."
+  - "Implement loops and conditionals for user interaction."
+  - "Work with a multi-step API flow (Deck of Cards: create deck → draw cards)."
+  - "Build a mini game using API data and comparison logic."
+
+python_version: "3.11"
+accounts: ["GitHub"]
+devices: ["Public APIs (Dad Jokes, Deck of Cards)"]
+
+overview: >
+  Move from cURL/Postman into actual Python automation with `requests`. You’ll fetch JSON,
+  pretty-print and extract fields, add a small user-driven loop, then chain API calls with
+  Deck of Cards to build a tiny “highest card wins” game.
+
+before_you_begin: >
+  Open the dev container and verify outbound HTTPS works. Confirm `python --version` and that
+  `requests` is importable. Create the folders `logs/`, `data/raw/`, and `data/reports/` if needed.
+
+resources:
+  - { title: "Requests (Python)", url: "https://requests.readthedocs.io/en/latest/" }
+  - { title: "Dad Jokes API", url: "https://icanhazdadjoke.com/api", note: "Use Accept: application/json to get JSON." }
+  - { title: "Deck of Cards API", url: "https://deckofcardsapi.com/", note: "Create deck → store deck_id → draw." }
+  - { title: "pprint (Python)", url: "https://docs.python.org/3/library/pprint.html" }
+
+faq:
+  - q: "I got HTML back instead of JSON—why?"
+    a: "Add a header like `Accept: application/json` for APIs (e.g., Dad Jokes)."
+  - q: "My draw fails on the Deck API."
+    a: "You must pass the exact `deck_id` returned from the create call into the draw call."
+  - q: "Face cards compare weirdly."
+    a: "Map values once: {2..10, JACK:11, QUEEN:12, KING:13, ACE:14} and compare integers."
+
+deliverables:
+  readme_summary: "Standard README with objectives, resources, grading, and tips."
+  instructions_summary: "Stepwise INSTRUCTIONS for four scripts, artifacts under data/, and logs under logs/."
+
+grading:
+  total_points: 75
+  rows:
+    - { step: "2", requirement: "`[STEP 2] Dev Container Started` appears in `logs/lab4_devcontainer.log`", points: 5 }
+    - { step: "3", requirement: "`logs/jokes_postman_export.log` has START, POSTMAN_EXPORT_RUN, HTTP_OK, RAW_PRINTED, END", points: 10 }
+    - { step: "4", requirement: "`logs/jokes_json.log` shows JSON header set, HTTP_OK, JSON_LOADED, PPRINT_OK", points: 10 }
+    - { step: "5", requirement: "`logs/jokes_json.log` includes JOKE_FIELD_OK and JOKE_PRINTED", points: 5 }
+    - { step: "6", requirement: "`logs/jokes_loop.log` shows LOOP_BEGIN, JOKE_FIELD_OK, and LOOP_CONTINUE/LOOP_STOP", points: 10 }
+    - { step: "7", requirement: "`logs/high_card.log` shows DECK_CREATE_OK with valid deck_id", points: 5 }
+    - { step: "8", requirement: "`logs/high_card.log` shows card draws, comparison, and winner/tie for ≥1 round", points: 15 }
+    - { step: "9", requirement: "Any script log includes an `LAB4_ERR ...` marker for a handled error", points: 5 }
+    - { step: "10", requirement: "All artifacts committed/pushed and PR opened", points: 10 }
+
+tips:
+  - title: "Got HTML instead of JSON"
+    symptom: "Output looks like an HTML page"
+    fix: "Set `headers={'Accept': 'application/json'}`."
+  - title: "Requests hangs"
+    symptom: "Script stuck on network call"
+    fix: "Pass `timeout=10` and handle `requests.Timeout`."
+  - title: "KeyError on JSON"
+    symptom: "`data['joke']` explodes"
+    fix: "Inspect full JSON once; use `.get('joke')` and validate."
+  - title: "Deck exhausted"
+    symptom: "Draw returns too few cards"
+    fix: "Recreate or reshuffle when `remaining` is 0."
+  - title: "Logs missing"
+    symptom: "Autograder finds no markers"
+    fix: "Use the provided `log(...)` helper and write to the correct file per script."
+
+autograder:
+  log_path: "logs/*.log"
+  required_markers:
+    - "LAB4_START"
+    - "[STEP 2] Dev Container Started"
+    - "LAB4_POSTMAN_EXPORT_RUN"
+    - "LAB4_HTTP_OK"
+    - "LAB4_RAW_PRINTED"
+    - "LAB4_ACCEPT_JSON_HEADER_SET"
+    - "LAB4_JSON_LOADED"
+    - "LAB4_PPRINT_OK"
+    - "LAB4_JOKE_FIELD_OK"
+    - "LAB4_JOKE_PRINTED"
+    - "LAB4_LOOP_BEGIN"
+    - "LAB4_LOOP_CONTINUE"
+    - "LAB4_LOOP_STOP"
+    - "LAB4_DECK_CREATE_OK"
+    - "LAB4_DRAW"
+    - "LAB4_COMPARE"
+    - "LAB4_ROUND_WINNER"
+    - "LAB4_ROUND_TIE"
+    - "LAB4_GAME_END"
+    - "LAB4_ERR"
+    - "LAB4_END"
+
+submission_checklist:
+  - "logs/jokes_postman_export.log includes START/END and required markers."
+  - "logs/jokes_json.log includes JSON header, HTTP_OK, JSON_LOADED, PPRINT_OK, JOKE_FIELD_OK, JOKE_PRINTED."
+  - "logs/jokes_loop.log shows multiple rounds with LOOP markers."
+  - "logs/high_card.log shows DECK_CREATE_OK, per-round DRAW/COMPARE/WINNER (or TIE), and GAME_END."
+  - "data/raw/jokes_last.json present."
+  - "data/raw/deck_draw_last.json present."
+  - "data/reports/joke_of_the_day.txt present."
+  - "data/reports/high_card_results.txt present."
+
+steps:
+  - title: "Clone the Repository"
+    goal: "Get your Classroom repo locally."
+    actions: "Clone, `cd` into it, and ensure `logs/`, `data/raw/`, and `data/reports/` exist."
+    done_when: "You see the folders above; Git is tracking changes."
+    log_marker: "LAB4_START"
+
+  - title: "Open a Dev Container"
+    goal: "Use the standardized environment."
+    actions: "Open in VS Code and reopen in container. Wait for READY, confirm Python."
+    done_when: "`[STEP 2] Dev Container Started` is written to `logs/lab4_devcontainer.log`."
+    log_marker: "[STEP 2] Dev Container Started"
+
+  - title: "Export from Postman → Python"
+    goal: "Move a Dad Jokes request from Postman into code."
+    actions: "Export as Python; save to `src/jokes_postman_export.py`; run and print response."
+    done_when: "Raw response prints and required log markers exist."
+    log_marker: "LAB4_POSTMAN_EXPORT_RUN, LAB4_HTTP_OK, LAB4_RAW_PRINTED"
+
+  - title: "Request JSON + pretty-print"
+    goal: "Parse and inspect JSON cleanly."
+    actions: "Add `Accept: application/json`; save last JSON to `data/raw/jokes_last.json`; pretty-print with `pprint` and write a one-line report to `data/reports/joke_of_the_day.txt`."
+    done_when: "`LAB4_JSON_LOADED` and `LAB4_PPRINT_OK` appear; report file exists."
+    log_marker: "LAB4_ACCEPT_JSON_HEADER_SET, LAB4_HTTP_OK, LAB4_JSON_LOADED, LAB4_PPRINT_OK, LAB4_JOKE_FIELD_OK, LAB4_JOKE_PRINTED"
+
+  - title: "Add a simple loop"
+    goal: "Fetch jokes until user stops."
+    actions: "Normalize input (`.strip().lower()`); loop with `y/n`; handle invalid input; log each round."
+    done_when: "Loop runs at least twice; proper LOOP_* markers present."
+    log_marker: "LAB4_LOOP_BEGIN, LAB4_LOOP_CONTINUE, LAB4_LOOP_STOP"
+
+  - title: "Create a deck (Deck of Cards)"
+    goal: "Chain calls with saved state."
+    actions: "Create a shuffled deck; store `deck_id`; log success or failure."
+    done_when: "`LAB4_DECK_CREATE_OK deck_id=...` exists in `logs/high_card.log`."
+    log_marker: "LAB4_DECK_CREATE_OK"
+
+  - title: "Highest card wins"
+    goal: "Use API data to power a tiny game."
+    actions: "From same deck, draw one card for player and CPU; map face values; compare; handle ties; append round summaries to `data/reports/high_card_results.txt`."
+    done_when: "At least one round logged with DRAW/COMPARE/WINNER (or TIE); `GAME_END` when exiting."
+    log_marker: "LAB4_DRAW, LAB4_COMPARE, LAB4_ROUND_WINNER, LAB4_ROUND_TIE, LAB4_GAME_END"
+
+  - title: "Error handling & polish"
+    goal: "Fail predictably."
+    actions: "Wrap requests in `try/except` with `timeout=`; on handled error, write `LAB4_ERR type=<ExceptionName> msg=\"...\"` to the relevant log."
+    done_when: "One controlled `LAB4_ERR` appears in any script log."
+    log_marker: "LAB4_ERR"
+
+  - title: "Commit, push, open PR"
+    goal: "Submit work for grading."
+    actions: "Commit source + artifacts + logs; push; open a PR to `main`."
+    done_when: "PR is open and green."
+    log_marker: "LAB4_END"
+
+license: "© 2025 Your Name — Classroom use."
+
