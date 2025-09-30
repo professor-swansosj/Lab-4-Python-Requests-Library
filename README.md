@@ -87,3 +87,5 @@ Move from cURL/Postman into actual Python automation with `requests`. You’ll f
 © 2025 Your Name — Classroom use.
 
 # HAPPY CODING!
+
+**Sincerely, Professor Swanson**
