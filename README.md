@@ -4,88 +4,201 @@
 **Module:** Network Automation Fundamentals • **Lab #:** 4  
 **Estimated Time:** 90–120 minutes
 
-## Objectives
-- Use the Python `requests` library to send HTTP requests and receive responses.
-- Export a request from Postman into Python and run it as a script.
-- Parse JSON into Python dicts/lists and extract specific fields.
-- Pretty-print JSON and compose f-strings for clear output.
-- Implement loops and conditionals for user interaction.
-- Work with a multi-step API flow (Deck of Cards: create deck → draw cards).
-- Build a mini game using API data and comparison logic.
+## Repository structure
 
-## Prerequisites
-- Python 3.11 (via the provided dev container)
-- Accounts: GitHub
-- Devices/Sandboxes: Public APIs (Dad Jokes, Deck of Cards)
-
-## Overview
-Move from cURL/Postman into actual Python automation with `requests`. You’ll fetch JSON, pretty-print and extract fields, add a small user-driven loop, then chain API calls with Deck of Cards to build a tiny “highest card wins” game.
-
-
-## Resources
-- [Requests (Python)](https://requests.readthedocs.io/en/latest/)- [Dad Jokes API](https://icanhazdadjoke.com/api) — Use Accept: application/json to get JSON.- [Deck of Cards API](https://deckofcardsapi.com/) — Create deck → store deck_id → draw.- [pprint (Python)](https://docs.python.org/3/library/pprint.html)
-
-## FAQ
-**Q:** I got HTML back instead of JSON—why?  
-**A:** Add a header like `Accept: application/json` for APIs (e.g., Dad Jokes).
-
-**Q:** My draw fails on the Deck API.  
-**A:** You must pass the exact `deck_id` returned from the create call into the draw call.
-
-**Q:** Face cards compare weirdly.  
-**A:** Map values once: {2..10, JACK:11, QUEEN:12, KING:13, ACE:14} and compare integers.
+```text
+Lab-4-Python-Requests-Library
+├── .devcontainer
+│   ├── devcontainer.json
+│   ├── health_check.py
+│   ├── post_create.sh
+│   └── post_start.sh
+├── .gitignore
+├── .markdownlint.json
+├── .markdownlintignore
+├── .pettierrc.yml
+├── INSTRUCTIONS.backup.md
+├── INSTRUCTIONS.md
+├── LICENSE
+├── README.backup.md
+├── README.md
+├── data
+│   └── inventory.example.yml
+├── lab.yml
+├── prettierrc.yml
+├── requirements.txt
+└── src
+    ├── __init__.py
+    └── main.py
+```
 
 
+## Lab Topics
 
-## Deliverables
-- Standard README with objectives, resources, grading, and tips.
-- Stepwise INSTRUCTIONS for four scripts, artifacts under data/, and logs under logs/.
-- Grading: **75 points**
+### The Python requests Library
+The `requests` library is a powerful and user-friendly HTTP library for Python. It allows you to send HTTP requests easily and 
+handle responses in a straightforward manner. With `requests`, you can interact with web services and APIs, making it an essential 
+tool for network automation and data retrieval tasks.
 
-## Grading Breakdown
-| Step | Requirement | Points |
-|---|---|---|
-| 2 | `[STEP 2] Dev Container Started` appears in `logs/lab4_devcontainer.log` | 5 |
-| 3 | `logs/jokes_postman_export.log` has START, POSTMAN_EXPORT_RUN, HTTP_OK, RAW_PRINTED, END | 10 |
-| 4 | `logs/jokes_json.log` shows JSON header set, HTTP_OK, JSON_LOADED, PPRINT_OK | 10 |
-| 5 | `logs/jokes_json.log` includes JOKE_FIELD_OK and JOKE_PRINTED | 5 |
-| 6 | `logs/jokes_loop.log` shows LOOP_BEGIN, JOKE_FIELD_OK, and LOOP_CONTINUE/LOOP_STOP | 10 |
-| 7 | `logs/high_card.log` shows DECK_CREATE_OK with valid deck_id | 5 |
-| 8 | `logs/high_card.log` shows card draws, comparison, and winner/tie for ≥1 round | 15 |
-| 9 | Any script log includes an `LAB4_ERR ...` marker for a handled error | 5 |
-| 10 | All artifacts committed/pushed and PR opened | 10 |
-| **Total** |  | **75** |
-
-## 🔧 Troubleshooting & Pro Tips
-**Got HTML instead of JSON**  
-*Symptom:* Output looks like an HTML page  
-*Fix:* Set `headers={'Accept': 'application/json'}`.
-
-**Requests hangs**  
-*Symptom:* Script stuck on network call  
-*Fix:* Pass `timeout=10` and handle `requests.Timeout`.
-
-**KeyError on JSON**  
-*Symptom:* `data['joke']` explodes  
-*Fix:* Inspect full JSON once; use `.get('joke')` and validate.
-
-**Deck exhausted**  
-*Symptom:* Draw returns too few cards  
-*Fix:* Recreate or reshuffle when `remaining` is 0.
-
-**Logs missing**  
-*Symptom:* Autograder finds no markers  
-*Fix:* Use the provided `log(...)` helper and write to the correct file per script.
+Key features of the `requests` library include:
+- Simple and intuitive API for sending HTTP requests (GET, POST, PUT, DELETE, etc.).
+- Automatic handling of cookies and sessions.
+- Support for custom headers, query parameters, and request bodies.
+- Built-in JSON support for parsing and generating JSON data.
+- Easy handling of response status codes and error handling.
 
 
+In our last lab we made API calls using cURL and Postman. In this lab we will move into Python and use the `requests` library to make 
+similar API calls programmatically. This will allow us to automate interactions with web services and build more complex workflows. Below
+is a simple example of how to use the `requests` library to make a GET request and print the response.
 
-## Autograder Notes
-- Log file: `logs/*.log`
-- Required markers: `LAB4_START`, `[STEP 2] Dev Container Started`, `LAB4_POSTMAN_EXPORT_RUN`, `LAB4_HTTP_OK`, `LAB4_RAW_PRINTED`, `LAB4_ACCEPT_JSON_HEADER_SET`, `LAB4_JSON_LOADED`, `LAB4_PPRINT_OK`, `LAB4_JOKE_FIELD_OK`, `LAB4_JOKE_PRINTED`, `LAB4_LOOP_BEGIN`, `LAB4_LOOP_CONTINUE`, `LAB4_LOOP_STOP`, `LAB4_DECK_CREATE_OK`, `LAB4_DRAW`, `LAB4_COMPARE`, `LAB4_ROUND_WINNER`, `LAB4_ROUND_TIE`, `LAB4_GAME_END`, `LAB4_ERR`, `LAB4_END`
+
+```python
+import requests
+
+response = requests.get("https://api.example.com/data")
+print(response.json())
+
+```
+
+### Why Use Python for API Interactions?
+Python is a versatile and widely-used programming language that is particularly well-suited for network automation
+and API interactions. Here are some reasons why Python is a great choice for working with APIs:
+
+1. **Ease of Use**: Python's syntax is clean and easy to read, making it accessible for both beginners and experienced developers.
+   This allows you to quickly write and understand code that interacts with APIs.
+
+2. **Rich Ecosystem**: Python has a vast ecosystem of libraries and frameworks that simplify API interactions. The `requests` library,
+   for example, provides a simple and intuitive way to send HTTP requests and handle responses.
+
+3. **Cross-Platform**: Python is cross-platform, meaning you can run your scripts on various operating systems without modification.
+
+4. **Integration Capabilities**: Python can easily integrate with other tools and systems, making it ideal for building complex workflows
+   that involve multiple APIs and services.
+
+5. **Community Support**: Python has a large and active community, which means you can find plenty of resources, tutorials, and support
+   when working with APIs.
+
+Overall, Python's simplicity, rich ecosystem, and integration capabilities make it an excellent choice for automating API interactions
+and building network automation solutions.
+
+
+### Working with JSON Responses
+When you make an API call, the response is often returned in JSON format. Python provides built-in support for working with JSON data through the `json` module.
+
+Here are some key points to keep in mind when working with JSON responses in Python:
+
+1. **Parsing JSON**: You can use the `json.loads()` function to parse a JSON string into a Python dictionary or list. This allows you to
+   easily access and manipulate the data.
+
+2. **Generating JSON**: You can use the `json.dumps()` function to convert a Python dictionary or list into a JSON string. This is useful
+   when you need to send JSON data in an API request.
+
+3. **Accessing Data**: Once you have parsed the JSON response, you can access specific fields using standard dictionary or list indexing.
+
+4. **Pretty-Printing**: The `pprint` module can be used to pretty-print JSON data, making it easier to read and understand.
+
+Below is an example of how to parse a JSON response from an API and access specific fields:
+
+
+```python
+import requests
+import json
+from pprint import pprint
+
+response = requests.get("https://api.example.com/data")
+data = json.loads(response.text)
+pprint(data)
+
+specific_field = data.get("field_name")
+print(specific_field)
+
+```
+
+### Retreiving a Joke from the Dad Jokes API
+The Dad Jokes API is a fun and simple API that provides random dad jokes. You can use this API to fetch jokes and display them in your applications.
+
+Here are some key points about the Dad Jokes API:
+
+1. **Endpoint**: The main endpoint for fetching a random dad joke is `https://icanhazdadjoke.com/`.
+
+2. **Headers**: To receive a JSON response, you need to set the `Accept` header to `application/json`.
+
+3. **Response Format**: The response will be in JSON format and will contain fields such as `id`, `joke`, and `status`.
+
+Below is an example of how to use the Dad Jokes API to fetch a random joke using Python's `requests` library:
+
+
+```python
+import requests
+
+response = requests.get("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
+data = response.json()
+print(data["joke"])
+
+```
+
+### Using the Deck of Cards API
+The Deck of Cards API is a simple API that allows you to create and manipulate decks of playing cards. You can use this API to create a new deck, draw cards, shuffle the deck, and more.
+
+Here are some key points about the Deck of Cards API:
+
+1. **Base URL**: The base URL for the Deck of Cards API is `https://deckofcardsapi.com/api/deck/`.
+
+2. **Creating a Deck**: You can create a new shuffled deck by making a GET request to `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`.
+
+3. **Drawing Cards**: To draw cards from a deck, you can make a GET request to `https://deckofcardsapi.com/api/deck/{deck_id}/draw/?count={count}`, where `{deck_id}` is the ID of the deck and `{count}` is the number of cards to draw.
+
+Below is an example of how to create a new deck and draw cards using Python's `requests` library:
+
+
+```python
+import requests
+
+# Create a new deck
+response = requests.get("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1")
+data = response.json()
+deck_id = data["deck_id"]
+print(f"Created new deck with ID: {deck_id}")
+
+# Draw cards from the deck
+response = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/draw/?count=2")
+data = response.json()
+print("Drawn cards:")
+for card in data["cards"]:
+    print(f"{card['value']} of {card['suit']}")
+
+```
+
+### Adding User Interaction
+Adding user interaction to your scripts can make them more dynamic and engaging. You can use Python's built-in `input()` function to prompt the user for input and make decisions based on their responses.
+
+Here are some key points about adding user interaction:
+
+1. **Prompting for Input**: Use the `input()` function to display a prompt and wait for the user to enter a response.
+
+2. **Processing Input**: You can process the user's input by normalizing it (e.g., converting to lowercase, stripping whitespace) and using conditionals to determine the next steps.
+
+3. **Loops**: You can use loops (e.g., `while` loops) to repeatedly prompt the user until they provide valid input or choose to exit.
+
+Below is an example of how to add user interaction to a script that fetches jokes from the Dad Jokes API:
+
+
+```python
+import requests
+
+while True:
+    response = requests.get("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
+    data = response.json()
+    print(data["joke"])
+
+    user_input = input("Do you want another joke? (yes/no): ").strip().lower()
+    if user_input != "yes":
+        break
+
+```
+
+
 
 ## License
 © 2025 Your Name — Classroom use.
-
-# HAPPY CODING!
-
-**Sincerely, Professor Swanson**
