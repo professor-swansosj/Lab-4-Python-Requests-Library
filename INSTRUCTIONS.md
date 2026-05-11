@@ -18,6 +18,14 @@
 - GitHub Classroom workflow (clone, commit, push, PR).
 - Prior Lab 3 experience with cURL/jq or equivalent.
 
+## Table of Contents
+
+1. [Step 1 — Clone the Repository](#step-1--clone-the-repository)
+2. [Step 2 — Open Dev Container](#step-2--open-dev-container)
+3. [Step 3 — Script 1 — tell_me_a_joke.py](#step-3--script-1--tell_me_a_jokepy)
+4. [Step 4 — Script 2 — high_card.py](#step-4--script-2--high_cardpy)
+5. [Step 5 — Finalize and Submit](#step-5--finalize-and-submit)
+
 ## Overview
 You’ll author two Python programs using the `requests` library. First, a simple script that fetches a single Dad Joke and prints only the joke text to stdout (and optionally saves it to a file). Second, you’ll build a dynamic 'highest card wins' game powered by the Deck of Cards API: any number of players draw one card, the highest rank wins; ties re-draw among tied players until a single winner emerges. You’ll log markers to `logs/lab4.log` for autograding and save artifacts under `data/`.
 
@@ -26,7 +34,12 @@ You’ll author two Python programs using the `requests` library. First, a simpl
 
 
 ## Resources
-- [Requests (Python)](https://requests.readthedocs.io/en/latest/)- [Dad Jokes API](https://icanhazdadjoke.com/api)- [Deck of Cards API](https://deckofcardsapi.com/)- [pprint (Python)](https://docs.python.org/3/library/pprint.html)- [logging (Python)](https://docs.python.org/3/library/logging.html)
+
+- [Requests (Python)](https://requests.readthedocs.io/en/latest/)
+- [Dad Jokes API](https://icanhazdadjoke.com/api)
+- [Deck of Cards API](https://deckofcardsapi.com/)
+- [pprint (Python)](https://docs.python.org/3/library/pprint.html)
+- [logging (Python)](https://docs.python.org/3/library/logging.html)
 ## Deliverables
 - `src/tell_me_a_joke.py` prints only the joke line to stdout and logs success.
 - `src/high_card.py` implements the dynamic highest-card game with tie-breaker rounds.

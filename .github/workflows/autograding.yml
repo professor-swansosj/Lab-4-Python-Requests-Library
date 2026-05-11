@@ -12,6 +12,7 @@ permissions:
 jobs:
   run-autograding-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     if: github.actor != 'github-classroom[bot]'
 
     steps:
@@ -20,133 +21,131 @@ jobs:
 
       - name: Step 2 marker present (5)
         id: step2_marker
+        if: always()
+        continue-on-error: true
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Step 2 marker present
           setup-command: ''
-          command: >-
-            LOG_FILE="logs/lab.log"; [ -f "$LOG_FILE" ] || LOG_FILE="logs/lab4.log";
-            test -f "$LOG_FILE" && grep -Fq "[STEP 2] Dev Container Started" "$LOG_FILE"
+          command: 'test -f logs/lab4.log && grep -Fq "[STEP 2] Dev Container Started" logs/lab4.log'
           timeout: 10
           max-score: 5
 
       - name: Joke HTTP marker present (5)
         id: joke_http_ok
+        if: always()
+        continue-on-error: true
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Joke HTTP marker present
           setup-command: ''
-          command: >-
-            LOG_FILE="logs/lab.log"; [ -f "$LOG_FILE" ] || LOG_FILE="logs/lab4.log";
-            test -f "$LOG_FILE" && grep -Fq "LAB4_JOKE_HTTP_OK" "$LOG_FILE"
+          command: 'test -f logs/lab4.log && grep -Fq "LAB4_JOKE_HTTP_OK" logs/lab4.log'
           timeout: 10
           max-score: 5
 
       - name: Joke JSON marker present (5)
         id: joke_json_ok
+        if: always()
+        continue-on-error: true
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Joke JSON marker present
           setup-command: ''
-          command: >-
-            LOG_FILE="logs/lab.log"; [ -f "$LOG_FILE" ] || LOG_FILE="logs/lab4.log";
-            test -f "$LOG_FILE" && grep -Fq "LAB4_JOKE_JSON_OK" "$LOG_FILE"
+          command: 'test -f logs/lab4.log && grep -Fq "LAB4_JOKE_JSON_OK" logs/lab4.log'
           timeout: 10
           max-score: 5
 
       - name: Joke printed marker present (5)
         id: joke_printed
+        if: always()
+        continue-on-error: true
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Joke printed marker present
           setup-command: ''
-          command: >-
-            LOG_FILE="logs/lab.log"; [ -f "$LOG_FILE" ] || LOG_FILE="logs/lab4.log";
-            test -f "$LOG_FILE" && grep -Fq "LAB4_JOKE_PRINTED" "$LOG_FILE"
+          command: 'test -f logs/lab4.log && grep -Fq "LAB4_JOKE_PRINTED" logs/lab4.log'
           timeout: 10
           max-score: 5
 
       - name: Deck creation marker present (5)
         id: deck_create
+        if: always()
+        continue-on-error: true
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Deck creation marker present
           setup-command: ''
-          command: >-
-            LOG_FILE="logs/lab.log"; [ -f "$LOG_FILE" ] || LOG_FILE="logs/lab4.log";
-            test -f "$LOG_FILE" && grep -Fq "LAB4_DECK_CREATE_OK" "$LOG_FILE"
+          command: 'test -f logs/lab4.log && grep -Fq "LAB4_DECK_CREATE_OK" logs/lab4.log'
           timeout: 10
           max-score: 5
 
       - name: Draw marker present (10)
         id: draw_ok
+        if: always()
+        continue-on-error: true
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Draw marker present
           setup-command: ''
-          command: >-
-            LOG_FILE="logs/lab.log"; [ -f "$LOG_FILE" ] || LOG_FILE="logs/lab4.log";
-            test -f "$LOG_FILE" && grep -Fq "LAB4_DRAW_OK" "$LOG_FILE"
+          command: 'test -f logs/lab4.log && grep -Fq "LAB4_DRAW_OK" logs/lab4.log'
           timeout: 10
           max-score: 10
 
       - name: Tie logic marker or implementation present (10)
         id: tie_round
+        if: always()
+        continue-on-error: true
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Tie logic marker or implementation present
           setup-command: ''
-          command: >-
-            LOG_FILE="logs/lab.log"; [ -f "$LOG_FILE" ] || LOG_FILE="logs/lab4.log";
-            (test -f "$LOG_FILE" && grep -Fq "LAB4_TIE_ROUND" "$LOG_FILE") ||
-            grep -Fq "LAB4_TIE_ROUND" src/high_card.py
+          command: '(test -f logs/lab4.log && grep -Fq "LAB4_TIE_ROUND" logs/lab4.log) || grep -Fq "LAB4_TIE_ROUND" src/high_card.py'
           timeout: 10
           max-score: 10
 
       - name: Game end marker and result artifact present (10)
         id: game_end
+        if: always()
+        continue-on-error: true
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Game end marker and result artifact present
           setup-command: ''
-          command: >-
-            LOG_FILE="logs/lab.log"; [ -f "$LOG_FILE" ] || LOG_FILE="logs/lab4.log";
-            test -f "$LOG_FILE" && grep -Fq "LAB4_GAME_END" "$LOG_FILE" &&
-            test -s data/high_card_result.txt
+          command: 'test -f logs/lab4.log && grep -Fq "LAB4_GAME_END" logs/lab4.log && test -s data/high_card_result.txt'
           timeout: 10
           max-score: 10
 
       - name: Error handling marker present (5)
         id: error_marker
+        if: always()
+        continue-on-error: true
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Error handling marker present
           setup-command: ''
-          command: >-
-            LOG_FILE="logs/lab.log"; [ -f "$LOG_FILE" ] || LOG_FILE="logs/lab4.log";
-            (test -f "$LOG_FILE" && grep -Fq "LAB4_ERR" "$LOG_FILE") ||
-            (grep -Fq "LAB4_ERR" src/tell_me_a_joke.py && grep -Fq "LAB4_ERR" src/high_card.py)
+          command: '(test -f logs/lab4.log && grep -Fq "LAB4_ERR" logs/lab4.log) || (grep -Fq "LAB4_ERR" src/tell_me_a_joke.py && grep -Fq "LAB4_ERR" src/high_card.py)'
           timeout: 10
           max-score: 5
 
       - name: Submission markers complete (15)
         id: submission_complete
+        if: always()
+        continue-on-error: true
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Submission markers complete
           setup-command: ''
           command: >-
-            LOG_FILE="logs/lab.log"; [ -f "$LOG_FILE" ] || LOG_FILE="logs/lab4.log";
-            test -f "$LOG_FILE" &&
-            grep -Fq "LAB4_START" "$LOG_FILE" &&
-            grep -Fq "[STEP 2] Dev Container Started" "$LOG_FILE" &&
-            grep -Fq "LAB4_JOKE_HTTP_OK" "$LOG_FILE" &&
-            grep -Fq "LAB4_JOKE_JSON_OK" "$LOG_FILE" &&
-            grep -Fq "LAB4_JOKE_PRINTED" "$LOG_FILE" &&
-            grep -Fq "LAB4_DECK_CREATE_OK" "$LOG_FILE" &&
-            grep -Fq "LAB4_DRAW_OK" "$LOG_FILE" &&
-            grep -Fq "LAB4_GAME_END" "$LOG_FILE" &&
-            grep -Fq "LAB4_END" "$LOG_FILE"
+            test -f logs/lab4.log &&
+            grep -Eq "LAB4[-_]START" logs/lab4.log &&
+            grep -Fq "[STEP 2] Dev Container Started" logs/lab4.log &&
+            grep -Fq "LAB4_JOKE_HTTP_OK" logs/lab4.log &&
+            grep -Fq "LAB4_JOKE_JSON_OK" logs/lab4.log &&
+            grep -Fq "LAB4_JOKE_PRINTED" logs/lab4.log &&
+            grep -Fq "LAB4_DECK_CREATE_OK" logs/lab4.log &&
+            grep -Fq "LAB4_DRAW_OK" logs/lab4.log &&
+            grep -Fq "LAB4_GAME_END" logs/lab4.log &&
+            grep -Eq "LAB4[-_]END" logs/lab4.log
           timeout: 10
           max-score: 15
 
