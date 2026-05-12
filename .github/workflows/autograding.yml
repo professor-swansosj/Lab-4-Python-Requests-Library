@@ -164,14 +164,4 @@ jobs:
           ERROR_MARKER_RESULTS: "${{ steps.error_marker.outputs.result }}"
           SUBMISSION_COMPLETE_RESULTS: "${{ steps.submission_complete.outputs.result }}"
         with:
-          runners: |
-            step2_marker
-            joke_http_ok
-            joke_json_ok
-            joke_printed
-            deck_create
-            draw_ok
-            tie_round
-            game_end
-            error_marker
-            submission_complete
+          runners: step2_marker,joke_http_ok,joke_json_ok,joke_printed,deck_create,draw_ok,tie_round,game_end,error_marker,submission_complete
