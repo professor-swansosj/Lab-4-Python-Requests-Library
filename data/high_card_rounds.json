@@ -1,0 +1,70 @@
+[
+  {
+    "round": 1,
+    "players": [
+      1,
+      2
+    ],
+    "raw_response": {
+      "success": true,
+      "deck_id": "dsmbvhgm3o1m",
+      "cards": [
+        {
+          "code": "2D",
+          "image": "https://deckofcardsapi.com/static/img/2D.png",
+          "images": {
+            "svg": "https://deckofcardsapi.com/static/img/2D.svg",
+            "png": "https://deckofcardsapi.com/static/img/2D.png"
+          },
+          "value": "2",
+          "suit": "DIAMONDS"
+        },
+        {
+          "code": "QC",
+          "image": "https://deckofcardsapi.com/static/img/QC.png",
+          "images": {
+            "svg": "https://deckofcardsapi.com/static/img/QC.svg",
+            "png": "https://deckofcardsapi.com/static/img/QC.png"
+          },
+          "value": "QUEEN",
+          "suit": "CLUBS"
+        }
+      ],
+      "remaining": 50
+    },
+    "results": [
+      {
+        "player": 1,
+        "card": {
+          "code": "2D",
+          "image": "https://deckofcardsapi.com/static/img/2D.png",
+          "images": {
+            "svg": "https://deckofcardsapi.com/static/img/2D.svg",
+            "png": "https://deckofcardsapi.com/static/img/2D.png"
+          },
+          "value": "2",
+          "suit": "DIAMONDS"
+        },
+        "value": 2
+      },
+      {
+        "player": 2,
+        "card": {
+          "code": "QC",
+          "image": "https://deckofcardsapi.com/static/img/QC.png",
+          "images": {
+            "svg": "https://deckofcardsapi.com/static/img/QC.svg",
+            "png": "https://deckofcardsapi.com/static/img/QC.png"
+          },
+          "value": "QUEEN",
+          "suit": "CLUBS"
+        },
+        "value": 12
+      }
+    ],
+    "highest_value": 12,
+    "leaders": [
+      2
+    ]
+  }
+]
